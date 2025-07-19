@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+
+  /* Futuristic cyber theme colors */
+  --cyber-dark: hsl(240, 15%, 6%);
+  --cyber-purple: hsl(253, 60%, 12%);
+  --neon-blue: hsl(195, 100%, 60%);
+  --neon-purple: hsl(270, 100%, 70%);
+  --neon-green: hsl(120, 100%, 50%);
+  --neon-amber: hsl(45, 100%, 60%);
+  --neon-cyan: hsl(180, 100%, 60%);
+  --neon-pink: hsl(320, 100%, 70%);
+  --electric-blue: hsl(210, 100%, 60%);
+  --plasma-purple: hsl(280, 100%, 65%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased text-foreground min-h-screen;
+    background: linear-gradient(135deg, 
+      #0a0a0a 0%,
+      #1a0a2e 15%, 
+      #16213e 35%, 
+      #0f3460 55%, 
+      #533483 75%, 
+      #7209b7 90%, 
+      #2d1b69 100%);
+    background-attachment: fixed;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .cyber-card {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl;
+  }
+  
+  .cyber-button {
+    background: linear-gradient(to right, hsl(195, 100%, 60%), hsl(270, 100%, 70%));
+    @apply rounded-xl font-medium hover:scale-105 transition-all duration-300;
+  }
+  
+  .neon-text {
+    background: linear-gradient(to right, hsl(195, 100%, 60%), hsl(270, 100%, 70%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-xl bg-white/10 border border-white/20;
+  }
+}
+
+@layer utilities {
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-matrix {
+    animation: matrix 15s linear infinite;
+  }
+  
+  .animate-hologram {
+    animation: hologram 4s ease-in-out infinite;
+  }
+  
+  .animate-cyber-pulse {
+    animation: cyberPulse 2s ease-in-out infinite;
+  }
+  
+  .animate-neon-flicker {
+    animation: neonFlicker 0.15s ease-in-out infinite alternate;
+  }
+  
+  .animate-data-stream {
+    animation: dataStream 3s linear infinite;
+  }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
+  100% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.8); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, hsl(233, 84%, 66%), hsl(258, 84%, 70%));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, hsl(233, 84%, 76%), hsl(258, 84%, 80%));
+}
+
+/* Glassmorphism effect for cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom gradient backgrounds */
+.gradient-cyber {
+  background: linear-gradient(135deg, 
+    hsl(240, 14%, 9%) 0%, 
+    hsl(253, 46%, 17%) 25%, 
+    hsl(240, 30%, 20%) 75%, 
+    hsl(260, 50%, 25%) 100%);
+}
+
+/* Neon border effect */
+.neon-border {
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3)) border-box;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+/* Text shadow effects */
+.neon-glow-text {
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* Loading spinner */
+.cyber-spinner {
+  border: 3px solid rgba(99, 102, 241, 0.3);
+  border-top: 3px solid hsl(233, 84%, 66%);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Advanced futuristic animations */
+@keyframes matrix {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes hologram {
+  0%, 100% { 
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 
+                 0 0 20px rgba(0, 255, 255, 0.6), 
+                 0 0 30px rgba(0, 255, 255, 0.4);
+  }
+  50% { 
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.4), 
+                 0 0 10px rgba(0, 255, 255, 0.2), 
+                 0 0 15px rgba(0, 255, 255, 0.1);
+  }
+}
+
+@keyframes cyberPulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.7);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8),
+                inset 0 0 40px rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 1);
+  }
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes dataStream {
+  0% { 
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { 
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+}
+
+/* Holographic card effect */
+.holographic-card {
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 255, 0.1) 0%,
+    rgba(138, 43, 226, 0.1) 25%,
+    rgba(0, 191, 255, 0.1) 50%,
+    rgba(255, 20, 147, 0.1) 75%,
+    rgba(0, 255, 127, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.holographic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(0, 255, 255, 0.2), 
+    transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Cyber grid background */
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+  color: white;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  animation: glitch-1 0.5s infinite;
+  color: #ff0040;
+  z-index: -1;
+}
+
+.glitch::after {
+  animation: glitch-2 0.5s infinite;
+  color: #00ffff;
+  z-index: -2;
+}
+
+@keyframes glitch-1 {
+  0%, 14%, 15%, 49%, 50%, 99%, 100% {
+    transform: translate(0);
+  }
+  15%, 49% {
+    transform: translate(-2px, -1px);
+  }
+}
+
+@keyframes glitch-2 {
+  0%, 20%, 21%, 62%, 63%, 99%, 100% {
+    transform: translate(0);
+  }
+  21%, 62% {
+    transform: translate(2px, 1px);
+  }
+}
