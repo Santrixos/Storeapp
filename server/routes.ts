@@ -184,8 +184,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/apps/random", async (req, res) => {
     try {
       const count = parseInt(req.query.count as string) || 6;
-      const apps = await storage.getRandomApps(count);
-      res.json(apps);
+      const allApps = await storage.getAllApps();
+      
+      // Shuffle and get random apps
+      const shuffled = allApps.sort(() => 0.5 - Math.random());
+      const randomApps = shuffled.slice(0, count);
+      
+      res.json(randomApps);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch random apps" });
     }

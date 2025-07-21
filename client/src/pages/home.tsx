@@ -1,11 +1,11 @@
-import Header from "@/components/Header";
+import SmartSearchHeader from "@/components/SmartSearchHeader";
 import HeroSection from "@/components/HeroSection";
 import CategoryNavigation from "@/components/CategoryNavigation";
-import FeaturedApps from "@/components/FeaturedApps";
-import TrendingApps from "@/components/TrendingApps";
-import AllAppsGrid from "@/components/AllAppsGrid";
+import AppCarousel from "@/components/AppCarousel";
+import ResponsiveAppGrid from "@/components/ResponsiveAppGrid";
 import AppDetailsModal from "@/components/AppDetailsModal";
 import Footer from "@/components/Footer";
+import { Star, Flame, Trophy } from "lucide-react";
 import { useState } from "react";
 import type { App } from "@shared/schema";
 
@@ -37,19 +37,53 @@ export default function Home() {
 
   return (
     <div className="min-h-screen overflow-x-hidden">
-      <Header 
-        searchQuery={searchQuery} 
-        onSearchChange={handleNormalSearch}
-        onAdvancedSearch={handleAdvancedSearch} 
-      />
+      {/* Hero Section */}
       <HeroSection />
+      
+      {/* Smart Search */}
+      <div className="container mx-auto px-4 -mt-20 relative z-10">
+        <SmartSearchHeader 
+          searchQuery={searchQuery} 
+          onSearchChange={handleNormalSearch}
+          onAdvancedSearch={handleAdvancedSearch} 
+        />
+      </div>
+
+      {/* Category Navigation */}
       <CategoryNavigation 
         selectedCategory={selectedCategory} 
         onCategoryChange={setSelectedCategory} 
       />
-      <FeaturedApps onAppSelect={setSelectedApp} />
-      <TrendingApps onAppSelect={setSelectedApp} />
-      <AllAppsGrid 
+
+      {/* Featured Apps Carousel */}
+      <AppCarousel
+        title="Aplicaciones Destacadas"
+        endpoint="/api/apps/featured"
+        icon={<Star className="h-6 w-6 text-white" />}
+        gradient="from-yellow-500 to-orange-600"
+        onAppSelect={setSelectedApp}
+      />
+
+      {/* Trending Apps Carousel */}
+      <AppCarousel
+        title="En Tendencia"
+        endpoint="/api/apps/trending"
+        icon={<Flame className="h-6 w-6 text-white" />}
+        gradient="from-orange-500 to-red-600"
+        onAppSelect={setSelectedApp}
+      />
+
+      {/* Random Apps Carousel */}
+      <AppCarousel
+        title="Descubre Nuevas Apps"
+        endpoint="/api/apps/random?count=8"
+        icon={<Trophy className="h-6 w-6 text-white" />}
+        gradient="from-purple-500 to-pink-600"
+        onAppSelect={setSelectedApp}
+      />
+
+      {/* Main Apps Grid */}
+      <ResponsiveAppGrid 
         category={selectedCategory}
         searchQuery={searchQuery}
         onAppSelect={setSelectedApp} 
