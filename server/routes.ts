@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertAppSchema } from "@shared/schema";
 import { z } from "zod";
-import { generateAppRecommendations, generateAppDescription, detectAppIcon } from "./openai";
+import { generateAppRecommendations, generateAppDescription, detectAppIcon, generateNexusBotResponse } from "./openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all apps
@@ -193,6 +193,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(randomApps);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch random apps" });
+    }
+  });
+
+  // NexusBot AI Chat endpoint
+  app.post("/api/nexusbot/chat", async (req, res) => {
+    try {
+      const { message } = req.body;
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+      
+      const response = await generateNexusBotResponse(message);
+      res.json(response);
+    } catch (error) {
+      console.error("NexusBot chat error:", error);
+      res.status(500).json({ message: "Failed to generate chat response" });
     }
   });
 

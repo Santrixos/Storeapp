@@ -171,3 +171,80 @@ export async function detectAppIcon(appName: string): Promise<string | null> {
     return null;
   }
 }
+
+export async function generateNexusBotResponse(userMessage: string): Promise<{
+  message: string;
+  suggestions?: string[];
+  action?: string;
+}> {
+  if (!openai) {
+    // Return fallback response when OpenAI is not available
+    return {
+      message: "¡Hola! Soy NexusBot de THE STYLE OF Nexus, tu tienda de aplicaciones mod. ¿En qué puedo ayudarte hoy?",
+      suggestions: ["Buscar juegos", "Apps populares", "Categorías", "Ayuda"],
+      action: "welcome"
+    };
+  }
+
+  try {
+    const systemPrompt = `Eres NexusBot, el asistente inteligente de "THE STYLE OF Nexus", una innovadora plataforma de distribución de aplicaciones Android modificadas (mod apps). 
+
+PERSONALIDAD:
+- Eres un asistente amigable, profesional y conocedor de tecnología
+- Tienes un estilo moderno y futurista
+- Eres experto en aplicaciones Android, mods, personalización y tecnología móvil
+- Ayudas a los usuarios a encontrar las mejores apps modificadas para sus necesidades
+
+CAPACIDADES:
+- Recomendar aplicaciones por categoría (juegos, social, productividad, herramientas, media)
+- Explicar qué son las apps mod y sus beneficios
+- Ayudar con búsquedas específicas
+- Dar consejos de instalación y seguridad
+- Sugerir alternativas populares
+
+INSTRUCCIONES:
+- Responde siempre en español
+- Sé conciso pero útil
+- Incluye emojis para hacer la conversación más amigable
+- Cuando sea apropiado, sugiere acciones específicas
+- Mantén un tono profesional pero cercano
+
+Responde SOLO en JSON con este formato:
+{
+  "message": "tu_respuesta_aquí",
+  "suggestions": ["sugerencia1", "sugerencia2", "sugerencia3"],
+  "action": "tipo_de_accion" // welcome, search, recommend, help, info
+}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt
+        },
+        {
+          role: "user",
+          content: userMessage
+        }
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 800,
+      temperature: 0.7
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    return {
+      message: result.message || "¡Hola! Soy NexusBot de THE STYLE OF Nexus. ¿En qué puedo ayudarte?",
+      suggestions: result.suggestions || ["Buscar apps", "Categorías", "Apps populares"],
+      action: result.action || "welcome"
+    };
+  } catch (error) {
+    console.error("Error generating NexusBot response:", error);
+    return {
+      message: "¡Hola! Soy NexusBot de THE STYLE OF Nexus 🚀 Estoy aquí para ayudarte a encontrar las mejores aplicaciones mod. ¿Qué tipo de app buscas?",
+      suggestions: ["Juegos mod", "Apps premium gratis", "Herramientas", "Ayuda"],
+      action: "welcome"
+    };
+  }
+}

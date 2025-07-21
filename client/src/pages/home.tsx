@@ -4,7 +4,6 @@ import CategoryNavigation from "@/components/CategoryNavigation";
 import AppCarousel from "@/components/AppCarousel";
 import ResponsiveAppGrid from "@/components/ResponsiveAppGrid";
 import AppDetailsModal from "@/components/AppDetailsModal";
-import HelpBot from "@/components/HelpBot";
 import Footer from "@/components/Footer";
 import { Star, Flame, Trophy } from "lucide-react";
 import { useState, useRef } from "react";
@@ -101,23 +100,7 @@ export default function Home() {
       {/* Footer */}
       <Footer />
 
-      {/* Help Bot */}
-      <HelpBot 
-        onSearchDemo={() => {
-          searchHeaderRef.current?.scrollIntoView({ behavior: 'smooth' });
-          setTimeout(() => {
-            const input = searchHeaderRef.current?.querySelector('input');
-            input?.focus();
-          }, 500);
-        }}
-        onCategoryDemo={(category) => {
-          setSelectedCategory(category);
-          categoryNavRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onFeaturedDemo={() => {
-          featuredSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }}
-      />
+      {/* Help functionality now provided by NexusBot AI chatbot */}
 
       {/* App Details Modal */}
       {selectedApp && (
