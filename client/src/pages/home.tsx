@@ -1,12 +1,13 @@
-import SmartSearchHeader from "@/components/SmartSearchHeader";
+import ImprovedSearchHeader from "@/components/ImprovedSearchHeader";
 import HeroSection from "@/components/HeroSection";
 import CategoryNavigation from "@/components/CategoryNavigation";
 import AppCarousel from "@/components/AppCarousel";
 import ResponsiveAppGrid from "@/components/ResponsiveAppGrid";
 import AppDetailsModal from "@/components/AppDetailsModal";
+import HelpBot from "@/components/HelpBot";
 import Footer from "@/components/Footer";
 import { Star, Flame, Trophy } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { App } from "@shared/schema";
 
 export default function Home() {
@@ -19,6 +20,10 @@ export default function Home() {
     category?: string;
     sortBy?: string;
   }>({ query: "" });
+  
+  const searchHeaderRef = useRef<HTMLDivElement>(null);
+  const featuredSectionRef = useRef<HTMLDivElement>(null);
+  const categoryNavRef = useRef<HTMLDivElement>(null);
 
   const handleAdvancedSearch = (query: string, category?: string, sortBy?: string) => {
     setSearchQuery(query);
@@ -41,8 +46,8 @@ export default function Home() {
       <HeroSection />
       
       {/* Smart Search */}
-      <div className="container mx-auto px-4 -mt-20 relative z-10">
-        <SmartSearchHeader 
+      <div ref={searchHeaderRef} className="container mx-auto px-4 -mt-20 relative z-10">
+        <ImprovedSearchHeader 
           searchQuery={searchQuery} 
           onSearchChange={handleNormalSearch}
           onAdvancedSearch={handleAdvancedSearch} 
@@ -50,19 +55,23 @@ export default function Home() {
       </div>
 
       {/* Category Navigation */}
-      <CategoryNavigation 
-        selectedCategory={selectedCategory} 
-        onCategoryChange={setSelectedCategory} 
-      />
+      <div ref={categoryNavRef}>
+        <CategoryNavigation 
+          selectedCategory={selectedCategory} 
+          onCategoryChange={setSelectedCategory} 
+        />
+      </div>
 
       {/* Featured Apps Carousel */}
-      <AppCarousel
-        title="Aplicaciones Destacadas"
-        endpoint="/api/apps/featured"
-        icon={<Star className="h-6 w-6 text-white" />}
-        gradient="from-yellow-500 to-orange-600"
-        onAppSelect={setSelectedApp}
-      />
+      <div ref={featuredSectionRef}>
+        <AppCarousel
+          title="Aplicaciones Destacadas"
+          endpoint="/api/apps/featured"
+          icon={<Star className="h-6 w-6 text-white" />}
+          gradient="from-yellow-500 to-orange-600"
+          onAppSelect={setSelectedApp}
+        />
+      </div>
 
       {/* Trending Apps Carousel */}
       <AppCarousel
@@ -89,21 +98,35 @@ export default function Home() {
         onAppSelect={setSelectedApp} 
       />
       
+      {/* Footer */}
+      <Footer />
+
+      {/* Help Bot */}
+      <HelpBot 
+        onSearchDemo={() => {
+          searchHeaderRef.current?.scrollIntoView({ behavior: 'smooth' });
+          setTimeout(() => {
+            const input = searchHeaderRef.current?.querySelector('input');
+            input?.focus();
+          }, 500);
+        }}
+        onCategoryDemo={(category) => {
+          setSelectedCategory(category);
+          categoryNavRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onFeaturedDemo={() => {
+          featuredSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
+
+      {/* App Details Modal */}
       {selectedApp && (
         <AppDetailsModal 
           app={selectedApp} 
+          isOpen={!!selectedApp} 
           onClose={() => setSelectedApp(null)} 
         />
       )}
-      
-      <Footer />
-      
-      {/* Floating Action Button */}
-      <div className="fixed bottom-8 right-8 z-40">
-        <button className="w-16 h-16 bg-gradient-to-r from-neon-green to-emerald-600 rounded-full shadow-2xl shadow-neon-green/30 hover:scale-110 transition-all duration-300 animate-pulse-slow">
-          <i className="fas fa-plus text-2xl text-white"></i>
-        </button>
-      </div>
     </div>
   );
 }

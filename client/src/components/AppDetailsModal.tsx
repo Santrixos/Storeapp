@@ -8,10 +8,11 @@ import { useState } from "react";
 
 interface AppDetailsModalProps {
   app: App;
+  isOpen: boolean;
   onClose: () => void;
 }
 
-export default function AppDetailsModal({ app, onClose }: AppDetailsModalProps) {
+export default function AppDetailsModal({ app, isOpen, onClose }: AppDetailsModalProps) {
   const [showVersions, setShowVersions] = useState(false);
 
   const handleDownload = () => {
@@ -32,7 +33,7 @@ export default function AppDetailsModal({ app, onClose }: AppDetailsModalProps) 
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="glass-card border-white/20 max-w-2xl max-h-[90vh] overflow-hidden p-0">
         {/* Modal Header */}
         <div className="p-6 border-b border-white/20">

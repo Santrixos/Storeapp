@@ -52,7 +52,10 @@ export class MemStorage implements IStorage {
           iconUrl: app.iconUrl || null,
           rating: app.rating || 0,
           downloads: app.downloads || "0",
+          requirements: app.requirements || "Android 5.0+",
+          languages: app.languages || "Español, Inglés",
           features: app.features || [],
+          isFeatured: app.isFeatured || false,
           createdAt: new Date(),
           updatedAt: new Date(),
         };
@@ -298,9 +301,23 @@ export class MemStorage implements IStorage {
   }
 
   async getTrendingApps(): Promise<App[]> {
-    return Array.from(this.apps.values())
-      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-      .slice(0, 6);
+    // Get apps with high downloads and recent activity
+    const apps = Array.from(this.apps.values());
+    if (apps.length === 0) return [];
+    
+    return apps
+      .filter(app => app.downloads && app.downloads !== "0")
+      .sort((a, b) => {
+        const aDownloads = this.parseDownloads(a.downloads || "0");
+        const bDownloads = this.parseDownloads(b.downloads || "0");
+        const aRating = a.rating || 0;
+        const bRating = b.rating || 0;
+        // Combine downloads and rating for trending score
+        const aScore = aDownloads * 0.7 + aRating * 1000;
+        const bScore = bDownloads * 0.7 + bRating * 1000;
+        return bScore - aScore;
+      })
+      .slice(0, 8);
   }
 
   async getAppsByDeveloper(developer: string): Promise<App[]> {
