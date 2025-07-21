@@ -299,9 +299,8 @@ export class MemStorage implements IStorage {
 
   async getTrendingApps(): Promise<App[]> {
     return Array.from(this.apps.values())
-      .filter(app => app.downloads && parseInt(app.downloads.replace(/\D/g, '')) > 1000000) // 1M+ downloads
       .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-      .slice(0, 10);
+      .slice(0, 6);
   }
 
   async getAppsByDeveloper(developer: string): Promise<App[]> {

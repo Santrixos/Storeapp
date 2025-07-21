@@ -121,7 +121,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-cyan-400/20 mt-12 pt-8 text-center">
           <p className="text-gray-400 flex items-center justify-center space-x-2">
-            <span>© 2024</span>
+            <span>© 2025</span>
             <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent font-semibold">L3HO</span>
             <span>. Todos los derechos reservados.</span>
             <Zap className="h-4 w-4 text-yellow-400 animate-pulse" />

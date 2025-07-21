@@ -73,10 +73,10 @@ export default function Home() {
         onAppSelect={setSelectedApp}
       />
 
-      {/* Random Apps Carousel */}
+      {/* Popular Apps Carousel */}
       <AppCarousel
-        title="Descubre Nuevas Apps"
-        endpoint="/api/apps/random?count=8"
+        title="Más Populares"
+        endpoint="/api/apps"
         icon={<Trophy className="h-6 w-6 text-white" />}
         gradient="from-purple-500 to-pink-600"
         onAppSelect={setSelectedApp}

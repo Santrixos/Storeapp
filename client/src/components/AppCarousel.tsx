@@ -3,8 +3,66 @@ import { ChevronLeft, ChevronRight, Star, Download, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ModernAppCard from "./ModernAppCard";
+import { getAppIcon, getAppEmoji, generateGradientIcon } from "@/utils/iconUtils";
 import type { App } from "@shared/schema";
 import { useState, useRef, useEffect } from "react";
+
+interface ModernAppIconProps {
+  app: App;
+  size?: "sm" | "md" | "lg";
+}
+
+function ModernAppIcon({ app, size = "md" }: ModernAppIconProps) {
+  const sizeClasses = {
+    sm: "w-12 h-12",
+    md: "w-16 h-16", 
+    lg: "w-20 h-20"
+  };
+
+  const iconUrl = getAppIcon(app);
+  const emoji = getAppEmoji(app.name, app.category);
+  const gradientClass = generateGradientIcon(app.name);
+  
+  if (typeof iconUrl === 'string' && iconUrl.startsWith('http')) {
+    return (
+      <div className={`relative ${sizeClasses[size]}`}>
+        <img 
+          src={iconUrl} 
+          alt={app.name}
+          className="w-full h-full object-cover rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110"
+          onError={(e) => {
+            const parent = e.currentTarget.parentElement;
+            if (parent) {
+              parent.innerHTML = `
+                <div class="w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110">
+                  ${emoji}
+                </div>
+                <div class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                </div>
+              `;
+            }
+          }}
+        />
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className={`relative ${sizeClasses[size]}`}>
+        <div className={`w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+          {emoji}
+        </div>
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
+}
 
 interface AppCarouselProps {
   title: string;
@@ -168,23 +226,7 @@ export default function AppCarousel({
                   {/* App Icon and Info */}
                   <div className="flex items-start space-x-4 mb-4">
                     <div className="relative">
-                      {app.iconUrl ? (
-                        <img 
-                          src={app.iconUrl} 
-                          alt={app.name}
-                          className="w-16 h-16 rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110"
-                          onError={(e) => {
-                            e.currentTarget.src = `https://api.iconscout.com/v4/unicons/line/mobile-android-alt.svg`;
-                          }}
-                        />
-                      ) : (
-                        <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                          <span className="text-2xl">📱</span>
-                        </div>
-                      )}
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                      </div>
+                      <ModernAppIcon app={app} size="lg" />
                     </div>
                     
                     <div className="flex-1 min-w-0">

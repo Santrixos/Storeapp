@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Star, Download, Grid3X3, List, Filter, SortAsc, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import ModernAppCard from "./ModernAppCard";
 import type { App } from "@shared/schema";
 import { useState, useEffect } from "react";
 
@@ -192,84 +191,19 @@ export default function ResponsiveAppGrid({ category, searchQuery, onAppSelect }
             : "flex flex-col space-y-4"
         }>
           {displayedApps.map((app: App, index: number) => (
-            <Card
+            <div
               key={app.id}
-              onClick={() => onAppSelect(app)}
-              className={`glass-card hover:scale-105 transition-all duration-500 cursor-pointer group border-cyan-400/20 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/20 ${
-                viewMode === "list" ? "flex-row" : ""
-              }`}
               style={{
                 animation: `slideInUp 0.6s ease-out ${index * 0.05}s both`
               }}
             >
-              <CardContent className={`p-6 ${viewMode === "list" ? "flex items-center space-x-6" : ""}`}>
-                {/* App Icon */}
-                <div className={`relative ${viewMode === "list" ? "flex-shrink-0" : "mb-4"}`}>
-                  {app.iconUrl ? (
-                    <img 
-                      src={app.iconUrl} 
-                      alt={app.name}
-                      className="w-16 h-16 rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110"
-                      onError={(e) => {
-                        e.currentTarget.src = `https://api.iconscout.com/v4/unicons/line/mobile-android-alt.svg`;
-                      }}
-                    />
-                  ) : (
-                    <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">📱</span>
-                    </div>
-                  )}
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-
-                {/* App Info */}
-                <div className={`${viewMode === "list" ? "flex-1" : ""}`}>
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">
-                    {app.name}
-                  </h3>
-                  
-                  <p className="text-gray-400 text-sm mb-3">{app.developer}</p>
-                  
-                  <p className={`text-gray-300 text-sm mb-4 leading-relaxed ${
-                    viewMode === "list" ? "line-clamp-2" : "line-clamp-3"
-                  }`}>
-                    {app.description}
-                  </p>
-
-                  {/* Stats */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-4 text-sm">
-                      <div className="flex items-center text-yellow-400">
-                        <Star className="h-4 w-4 mr-1 fill-current" />
-                        <span>{(app.rating / 10).toFixed(1)}</span>
-                      </div>
-                      <div className="flex items-center text-green-400">
-                        <Download className="h-4 w-4 mr-1" />
-                        <span>{app.downloads}</span>
-                      </div>
-                      <div className="flex items-center text-blue-400">
-                        <Eye className="h-4 w-4 mr-1" />
-                        <span>{app.size}</span>
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="bg-cyan-900/30 text-cyan-300">
-                      {app.category}
-                    </Badge>
-                  </div>
-
-                  {/* Action Button */}
-                  <Button
-                    onClick={(e) => handleDownload(e, app.downloadUrl)}
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/30"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Descargar Gratis
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+              <ModernAppCard
+                app={app}
+                onAppSelect={onAppSelect}
+                layout={viewMode}
+                showDownloadButton={true}
+              />
+            </div>
           ))}
         </div>
 
