@@ -13,28 +13,26 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(207, 90%, 54%);
+  --primary: hsl(168, 85%, 52%);
   --primary-foreground: hsl(211, 100%, 99%);
-  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary: hsl(197, 92%, 48%);
   --secondary-foreground: hsl(0, 0%, 98%);
-  --accent: hsl(240, 3.7%, 15.9%);
+  --accent: hsl(142, 76%, 36%);
   --accent-foreground: hsl(0, 0%, 98%);
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(0, 0%, 98%);
   --ring: hsl(240, 4.9%, 83.9%);
   --radius: 0.5rem;
 
-  /* Futuristic cyber theme colors */
+  /* Modern green/teal theme colors */
   --cyber-dark: hsl(240, 15%, 6%);
-  --cyber-purple: hsl(253, 60%, 12%);
-  --neon-blue: hsl(195, 100%, 60%);
-  --neon-purple: hsl(270, 100%, 70%);
-  --neon-green: hsl(120, 100%, 50%);
-  --neon-amber: hsl(45, 100%, 60%);
+  --cyber-green: hsl(142, 60%, 12%);
+  --neon-emerald: hsl(168, 85%, 52%);
+  --neon-teal: hsl(197, 92%, 48%);
+  --neon-green: hsl(142, 76%, 36%);
   --neon-cyan: hsl(180, 100%, 60%);
-  --neon-pink: hsl(320, 100%, 70%);
-  --electric-blue: hsl(210, 100%, 60%);
-  --plasma-purple: hsl(280, 100%, 65%);
+  --electric-emerald: hsl(158, 85%, 50%);
+  --plasma-teal: hsl(185, 95%, 55%);
 }
 
 @layer base {
@@ -46,12 +44,12 @@
     @apply font-sans antialiased text-foreground min-h-screen;
     background: linear-gradient(135deg, 
       #0a0a0a 0%,
-      #1a0a2e 15%, 
-      #16213e 35%, 
-      #0f3460 55%, 
-      #533483 75%, 
-      #7209b7 90%, 
-      #2d1b69 100%);
+      #0a2e1a 15%, 
+      #163e21 35%, 
+      #0f6034 55%, 
+      #348353 75%, 
+      #09b754 90%, 
+      #1b6930 100%);
     background-attachment: fixed;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
@@ -63,12 +61,12 @@
   }
   
   .cyber-button {
-    background: linear-gradient(to right, hsl(195, 100%, 60%), hsl(270, 100%, 70%));
+    background: linear-gradient(to right, hsl(168, 85%, 52%), hsl(197, 92%, 48%));
     @apply rounded-xl font-medium hover:scale-105 transition-all duration-300;
   }
   
   .neon-text {
-    background: linear-gradient(to right, hsl(195, 100%, 60%), hsl(270, 100%, 70%));
+    background: linear-gradient(to right, hsl(168, 85%, 52%), hsl(197, 92%, 48%));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

@@ -75,11 +75,11 @@ export default function HeroSection() {
 
           {/* Main Title with 3D effect */}
           <div className="relative mb-8">
-            <h1 className="text-8xl md:text-9xl font-black mb-4 leading-none">
-              <span className="block bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse-slow">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-4 leading-none">
+              <span className="block bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-600 bg-clip-text text-transparent animate-pulse-slow">
                 THE STYLE
               </span>
-              <span className="block bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-400 bg-clip-text text-transparent animate-pulse-slow" style={{animationDelay: '1s'}}>
+              <span className="block bg-gradient-to-r from-cyan-600 via-blue-500 to-emerald-400 bg-clip-text text-transparent animate-pulse-slow" style={{animationDelay: '1s'}}>
                 OF NEXUS
               </span>
             </h1>
@@ -104,24 +104,14 @@ export default function HeroSection() {
             </p>
           </div>
 
-          {/* Futuristic Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 mb-16">
-            <Button className="group relative px-10 py-6 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-2xl shadow-cyan-500/30 border border-cyan-400/30">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+          {/* Simplified Action Button */}
+          <div className="flex justify-center items-center mb-16">
+            <Button className="group relative px-12 py-6 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-2xl shadow-emerald-500/30 border border-emerald-400/30">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
               <div className="relative flex items-center">
-                <Zap className="mr-3 h-6 w-6 animate-pulse" />
-                Explorar con IA
+                <Download className="mr-3 h-6 w-6 animate-pulse" />
+                Explorar Aplicaciones
                 <Sparkles className="ml-3 h-5 w-5 group-hover:animate-spin" />
-              </div>
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="group px-10 py-6 bg-black/30 backdrop-blur-xl border-2 border-purple-500/50 rounded-2xl font-bold text-lg hover:bg-purple-500/10 transition-all duration-300 text-white hover:border-purple-400 hover:scale-105 shadow-xl shadow-purple-500/20"
-            >
-              <div className="flex items-center">
-                <Play className="mr-3 h-6 w-6 group-hover:animate-bounce" />
-                Demo Interactivo
               </div>
             </Button>
           </div>

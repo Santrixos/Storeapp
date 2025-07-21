@@ -20,48 +20,19 @@ function ModernAppIcon({ app, size = "md" }: ModernAppIconProps) {
     lg: "w-20 h-20"
   };
 
-  const iconUrl = getAppIcon(app);
   const emoji = getAppEmoji(app.name, app.category);
   const gradientClass = generateGradientIcon(app.name);
   
-  if (typeof iconUrl === 'string' && iconUrl.startsWith('http')) {
-    return (
-      <div className={`relative ${sizeClasses[size]}`}>
-        <img 
-          src={iconUrl} 
-          alt={app.name}
-          className="w-full h-full object-cover rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110"
-          onError={(e) => {
-            const parent = e.currentTarget.parentElement;
-            if (parent) {
-              parent.innerHTML = `
-                <div class="w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110">
-                  ${emoji}
-                </div>
-                <div class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                </div>
-              `;
-            }
-          }}
-        />
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-        </div>
+  return (
+    <div className={`relative ${sizeClasses[size]}`}>
+      <div className={`w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+        {emoji}
       </div>
-    );
-  } else {
-    return (
-      <div className={`relative ${sizeClasses[size]}`}>
-        <div className={`w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110`}>
-          {emoji}
-        </div>
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-        </div>
+      <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 interface AppCarouselProps {
