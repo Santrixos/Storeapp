@@ -1,7 +1,10 @@
-import { X, Star, Download, Share, Check } from "lucide-react";
+import { X, Star, Download, Share, Check, Package, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { AppVersionsModal } from "./AppVersionsModal";
 import type { App } from "@shared/schema";
+import { useState } from "react";
 
 interface AppDetailsModalProps {
   app: App;
@@ -9,6 +12,8 @@ interface AppDetailsModalProps {
 }
 
 export default function AppDetailsModal({ app, onClose }: AppDetailsModalProps) {
+  const [showVersions, setShowVersions] = useState(false);
+
   const handleDownload = () => {
     window.open(app.downloadUrl, '_blank');
   };
@@ -136,6 +141,14 @@ export default function AppDetailsModal({ app, onClose }: AppDetailsModalProps) 
               Descargar Ahora
             </Button>
             <Button
+              onClick={() => setShowVersions(true)}
+              variant="outline"
+              className="px-6 py-3 glass-effect border border-purple-400/30 rounded-xl font-medium hover:bg-purple-400/20 transition-all duration-300"
+            >
+              <History className="mr-2 h-4 w-4" />
+              Versiones
+            </Button>
+            <Button
               onClick={handleShare}
               variant="outline"
               className="px-6 py-3 glass-effect border border-white/20 rounded-xl font-medium hover:bg-white/20 transition-all duration-300"
@@ -146,6 +159,13 @@ export default function AppDetailsModal({ app, onClose }: AppDetailsModalProps) 
           </div>
         </div>
       </DialogContent>
+
+      {/* App Versions Modal */}
+      <AppVersionsModal
+        app={app}
+        isOpen={showVersions}
+        onClose={() => setShowVersions(false)}
+      />
     </Dialog>
   );
 }

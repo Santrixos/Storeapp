@@ -1,4 +1,6 @@
 import { users, apps, type User, type InsertUser, type App, type InsertApp } from "@shared/schema";
+import { CatalogProcessor } from "./catalogProcessor";
+import path from "path";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -10,8 +12,13 @@ export interface IStorage {
   getAppsByCategory(category: string): Promise<App[]>;
   getFeaturedApps(): Promise<App[]>;
   searchApps(query: string): Promise<App[]>;
+  searchAppsAdvanced(query: string, category?: string, sortBy?: string): Promise<App[]>;
+  getAppVersions(appName: string): Promise<App[]>;
   createApp(app: InsertApp): Promise<App>;
   updateApp(id: number, app: Partial<InsertApp>): Promise<App | undefined>;
+  getTrendingApps(): Promise<App[]>;
+  getAppsByDeveloper(developer: string): Promise<App[]>;
+  getRandomApps(count: number): Promise<App[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -26,11 +33,40 @@ export class MemStorage implements IStorage {
     this.currentUserId = 1;
     this.currentAppId = 1;
 
-    // Initialize with sample data
+    // Initialize with catalog data
     this.initializeApps();
   }
 
-  private initializeApps() {
+  private async initializeApps() {
+    try {
+      // Process the catalog file
+      const catalogPath = path.join(process.cwd(), 'catalogo_juegos-2_1753114960857.json');
+      const processor = new CatalogProcessor();
+      const catalogApps = await processor.processCatalog(catalogPath);
+      
+      // Add catalog apps
+      catalogApps.forEach(app => {
+        const appWithId: App = {
+          id: this.currentAppId++,
+          ...app,
+          iconUrl: app.iconUrl || null,
+          rating: app.rating || 0,
+          downloads: app.downloads || "0",
+          features: app.features || [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        this.apps.set(appWithId.id, appWithId);
+      });
+
+      console.log(`Loaded ${catalogApps.length} apps from catalog`);
+    } catch (error) {
+      console.warn('Could not load catalog, using fallback data:', error);
+      this.initializeFallbackApps();
+    }
+  }
+
+  private initializeFallbackApps() {
     const sampleApps: InsertApp[] = [
       {
         name: "WhatsApp Plus",
@@ -216,6 +252,75 @@ export class MemStorage implements IStorage {
     };
     this.apps.set(id, updatedApp);
     return updatedApp;
+  }
+
+  async searchAppsAdvanced(query: string, category?: string, sortBy?: string): Promise<App[]> {
+    const lowercaseQuery = query.toLowerCase();
+    let results = Array.from(this.apps.values())
+      .filter(app => {
+        const matchesQuery = 
+          app.name.toLowerCase().includes(lowercaseQuery) ||
+          app.developer.toLowerCase().includes(lowercaseQuery) ||
+          app.description.toLowerCase().includes(lowercaseQuery) ||
+          (app.features && app.features.some(feature => feature.toLowerCase().includes(lowercaseQuery)));
+        
+        const matchesCategory = !category || category === 'all' || app.category === category;
+        
+        return matchesQuery && matchesCategory;
+      });
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'rating':
+        results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'downloads':
+        results.sort((a, b) => this.parseDownloads(b.downloads || "0") - this.parseDownloads(a.downloads || "0"));
+        break;
+      case 'name':
+        results.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'newest':
+        results.sort((a, b) => (b.createdAt ? new Date(b.createdAt).getTime() : 0) - (a.createdAt ? new Date(a.createdAt).getTime() : 0));
+        break;
+      default:
+        results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+
+    return results;
+  }
+
+  async getAppVersions(appName: string): Promise<App[]> {
+    const baseAppName = appName.replace(/\sv\d+\.\d+\.\d+/g, '');
+    return Array.from(this.apps.values())
+      .filter(app => app.name.includes(baseAppName))
+      .sort((a, b) => b.version.localeCompare(a.version));
+  }
+
+  async getTrendingApps(): Promise<App[]> {
+    return Array.from(this.apps.values())
+      .filter(app => app.downloads && parseInt(app.downloads.replace(/\D/g, '')) > 1000000) // 1M+ downloads
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      .slice(0, 10);
+  }
+
+  async getAppsByDeveloper(developer: string): Promise<App[]> {
+    return Array.from(this.apps.values())
+      .filter(app => app.developer.toLowerCase().includes(developer.toLowerCase()))
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  }
+
+  async getRandomApps(count: number): Promise<App[]> {
+    const allApps = Array.from(this.apps.values());
+    const shuffled = allApps.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+
+  private parseDownloads(downloads: string): number {
+    const num = parseInt(downloads.replace(/\D/g, ''));
+    if (downloads.includes('M')) return num * 1000000;
+    if (downloads.includes('K')) return num * 1000;
+    return num;
   }
 }
 

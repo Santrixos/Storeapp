@@ -1,20 +1,32 @@
-import { Search, Heart, User, Box } from "lucide-react";
+import { Search, Heart, User, Box, Filter, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AISearchSuggestions from "./AISearchSuggestions";
+import { AdvancedSearch } from "./AdvancedSearch";
 import { useState } from "react";
 
 interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  onAdvancedSearch?: (query: string, category?: string, sortBy?: string) => void;
 }
 
-export default function Header({ searchQuery, onSearchChange }: HeaderProps) {
+export default function Header({ searchQuery, onSearchChange, onAdvancedSearch }: HeaderProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
   const handleSuggestionClick = (suggestion: string) => {
     onSearchChange(suggestion);
     setShowSuggestions(false);
+  };
+
+  const handleAdvancedSearch = (query: string, category?: string, sortBy?: string) => {
+    if (onAdvancedSearch) {
+      onAdvancedSearch(query, category, sortBy);
+    } else {
+      onSearchChange(query);
+    }
+    setShowAdvancedSearch(false);
   };
 
   return (
@@ -62,7 +74,16 @@ export default function Header({ searchQuery, onSearchChange }: HeaderProps) {
                   onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                   className="w-full px-8 py-4 bg-black/30 backdrop-blur-xl border-2 border-cyan-400/30 rounded-3xl focus:border-cyan-400 focus:bg-black/50 transition-all duration-300 text-white placeholder:text-cyan-300/70 text-lg shadow-lg shadow-cyan-500/10"
                 />
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-3">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowAdvancedSearch(true)}
+                    className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-400/10 p-2"
+                    title="Búsqueda avanzada"
+                  >
+                    <SlidersHorizontal className="h-5 w-5" />
+                  </Button>
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <Search className="text-cyan-400 h-6 w-6 animate-pulse" />
                 </div>
@@ -97,6 +118,18 @@ export default function Header({ searchQuery, onSearchChange }: HeaderProps) {
           </div>
         </div>
       </div>
+
+      {/* Advanced Search Modal */}
+      {showAdvancedSearch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="w-full max-w-4xl mx-4">
+            <AdvancedSearch 
+              onSearch={handleAdvancedSearch}
+              onClose={() => setShowAdvancedSearch(false)}
+            />
+          </div>
+        </div>
+      )}
     </header>
   );
 }

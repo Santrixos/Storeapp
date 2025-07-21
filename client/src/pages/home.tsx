@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CategoryNavigation from "@/components/CategoryNavigation";
 import FeaturedApps from "@/components/FeaturedApps";
+import TrendingApps from "@/components/TrendingApps";
 import AllAppsGrid from "@/components/AllAppsGrid";
 import AppDetailsModal from "@/components/AppDetailsModal";
 import Footer from "@/components/Footer";
@@ -12,16 +13,42 @@ export default function Home() {
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
+  const [advancedSearchParams, setAdvancedSearchParams] = useState<{
+    query: string;
+    category?: string;
+    sortBy?: string;
+  }>({ query: "" });
+
+  const handleAdvancedSearch = (query: string, category?: string, sortBy?: string) => {
+    setSearchQuery(query);
+    setAdvancedSearchParams({ query, category, sortBy });
+    setIsAdvancedSearch(true);
+    if (category) {
+      setSelectedCategory(category);
+    }
+  };
+
+  const handleNormalSearch = (query: string) => {
+    setSearchQuery(query);
+    setIsAdvancedSearch(false);
+    setAdvancedSearchParams({ query });
+  };
 
   return (
     <div className="min-h-screen overflow-x-hidden">
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Header 
+        searchQuery={searchQuery} 
+        onSearchChange={handleNormalSearch}
+        onAdvancedSearch={handleAdvancedSearch} 
+      />
       <HeroSection />
       <CategoryNavigation 
         selectedCategory={selectedCategory} 
         onCategoryChange={setSelectedCategory} 
       />
       <FeaturedApps onAppSelect={setSelectedApp} />
+      <TrendingApps onAppSelect={setSelectedApp} />
       <AllAppsGrid 
         category={selectedCategory}
         searchQuery={searchQuery}

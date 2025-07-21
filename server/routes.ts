@@ -130,6 +130,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Advanced search with filters and sorting
+  app.get("/api/apps/search/advanced", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      const category = req.query.category as string;
+      const sortBy = req.query.sortBy as string;
+      
+      if (!query) {
+        return res.status(400).json({ message: "Search query is required" });
+      }
+      
+      const apps = await storage.searchAppsAdvanced(query, category, sortBy);
+      res.json(apps);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to perform advanced search" });
+    }
+  });
+
+  // Get app versions
+  app.get("/api/apps/versions/:appName", async (req, res) => {
+    try {
+      const { appName } = req.params;
+      const versions = await storage.getAppVersions(decodeURIComponent(appName));
+      res.json(versions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch app versions" });
+    }
+  });
+
+  // Get trending apps
+  app.get("/api/apps/trending", async (req, res) => {
+    try {
+      const apps = await storage.getTrendingApps();
+      res.json(apps);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch trending apps" });
+    }
+  });
+
+  // Get apps by developer
+  app.get("/api/apps/developer/:developer", async (req, res) => {
+    try {
+      const { developer } = req.params;
+      const apps = await storage.getAppsByDeveloper(decodeURIComponent(developer));
+      res.json(apps);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch apps by developer" });
+    }
+  });
+
+  // Get random apps
+  app.get("/api/apps/random", async (req, res) => {
+    try {
+      const count = parseInt(req.query.count as string) || 6;
+      const apps = await storage.getRandomApps(count);
+      res.json(apps);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch random apps" });
+    }
+  });
+
   // Auto-detect app icon (legacy)
   app.get("/api/apps/icon/:packageName", async (req, res) => {
     try {
