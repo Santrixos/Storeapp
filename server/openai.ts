@@ -177,12 +177,59 @@ export async function generateNexusBotResponse(userMessage: string): Promise<{
   suggestions?: string[];
   action?: string;
 }> {
+  // Enhanced fallback responses for better user experience
+  const responses = [
+    {
+      keywords: ["hola", "hi", "hello", "buenas", "saludos"],
+      message: "¡Hola! 🚀 Soy NexusBot, tu asistente inteligente de THE STYLE OF Nexus. Puedo ayudarte a encontrar las mejores aplicaciones mod. ¿Qué tipo de app buscas?",
+      suggestions: ["Juegos populares", "Apps premium gratis", "Herramientas útiles", "Redes sociales mod"]
+    },
+    {
+      keywords: ["juegos", "games", "gaming", "jugar"],
+      message: "¡Excelente! 🎮 Tenemos una increíble colección de juegos modificados con funciones premium desbloqueadas. ¿Qué género te interesa?",
+      suggestions: ["Acción y aventura", "Estrategia", "Deportes", "Puzzle", "Ver todos los juegos"]
+    },
+    {
+      keywords: ["spotify", "música", "music", "audio"],
+      message: "🎵 ¡Perfecto! Spotify Premium mod es una de nuestras apps más populares. Incluye música sin límites, sin anuncios y descargas offline.",
+      suggestions: ["Descargar Spotify mod", "Otras apps de música", "YouTube Music mod", "Reproductores premium"]
+    },
+    {
+      keywords: ["whatsapp", "chat", "mensajes", "social"],
+      message: "💬 Las apps de comunicación mod son muy populares. WhatsApp Plus, Telegram Premium y otras con funciones extra.",
+      suggestions: ["WhatsApp Plus", "Instagram mod", "Telegram Premium", "Apps sociales"]
+    },
+    {
+      keywords: ["free fire", "pubg", "fortnite", "battle"],
+      message: "⚔️ ¡Los battle royale! Free Fire mod y PUBG Mobile con skins desbloqueadas y ventajas competitivas.",
+      suggestions: ["Free Fire mod", "PUBG Mobile", "Call of Duty", "Otros shooters"]
+    }
+  ];
+
+  const lowerMessage = userMessage.toLowerCase();
+  
+  for (const response of responses) {
+    if (response.keywords.some(keyword => lowerMessage.includes(keyword))) {
+      return {
+        message: response.message,
+        suggestions: response.suggestions,
+        action: "recommend"
+      };
+    }
+  }
+
+  // Default creative response
+  const defaultMessages = [
+    "🔍 Interesante búsqueda. THE STYLE OF Nexus tiene miles de apps mod. ¿Podrías ser más específico sobre lo que necesitas?",
+    "✨ Estoy aquí para ayudarte a encontrar la app perfecta. ¿Buscas algo específico o quieres explorar categorías?",
+    "🚀 ¡Genial! Nuestro catálogo tiene apps increíbles. ¿Te interesan juegos, productividad, entretenimiento o herramientas?"
+  ];
+
   if (!openai) {
-    // Return fallback response when OpenAI is not available
     return {
-      message: "¡Hola! Soy NexusBot de THE STYLE OF Nexus, tu tienda de aplicaciones mod. ¿En qué puedo ayudarte hoy?",
-      suggestions: ["Buscar juegos", "Apps populares", "Categorías", "Ayuda"],
-      action: "welcome"
+      message: defaultMessages[Math.floor(Math.random() * defaultMessages.length)],
+      suggestions: ["Explorar categorías", "Apps populares", "Buscar por nombre", "Ayuda"],
+      action: "help"
     };
   }
 

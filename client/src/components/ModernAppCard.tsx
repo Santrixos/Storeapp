@@ -2,8 +2,7 @@ import { Star, Download, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import OptimizedImage from "./ImageOptimizer";
-import AppIconGenerator from "./AppIconGenerator";
+import { RealAppIcon } from "./RealAppIcons";
 import type { App } from "@shared/schema";
 
 interface ModernAppCardProps {
@@ -26,23 +25,10 @@ export default function ModernAppCard({
 
   const AppIcon = () => {
     return (
-      <div className="relative w-full h-full">
-        <AppIconGenerator 
-          appName={app.name}
-          category={app.category}
-          size="lg"
-          className="w-full h-full"
-        />
-        {app.iconUrl && (
-          <OptimizedImage
-            src={app.iconUrl}
-            alt={app.name}
-            className="absolute inset-0 w-full h-full rounded-xl"
-            size="lg"
-            lazy={true}
-          />
-        )}
-      </div>
+      <RealAppIcon 
+        appName={app.name}
+        className="w-full h-full rounded-xl shadow-lg"
+      />
     );
   };
 

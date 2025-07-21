@@ -1,4 +1,4 @@
-import ImprovedSearchHeader from "@/components/ImprovedSearchHeader";
+import { EnhancedSearch } from "@/components/EnhancedSearch";
 import HeroSection from "@/components/HeroSection";
 import CategoryNavigation from "@/components/CategoryNavigation";
 import AppCarousel from "@/components/AppCarousel";
@@ -44,12 +44,12 @@ export default function Home() {
       {/* Hero Section */}
       <HeroSection />
       
-      {/* Smart Search */}
-      <div ref={searchHeaderRef} className="container mx-auto px-4 -mt-20 relative z-10">
-        <ImprovedSearchHeader 
-          searchQuery={searchQuery} 
-          onSearchChange={handleNormalSearch}
-          onAdvancedSearch={handleAdvancedSearch} 
+      {/* Enhanced Search Section */}
+      <div ref={searchHeaderRef} className="container mx-auto px-4 -mt-20 relative z-10 mb-12">
+        <EnhancedSearch 
+          onSearch={setSearchQuery}
+          onAppSelect={setSelectedApp}
+          className="w-full max-w-4xl mx-auto"
         />
       </div>
 

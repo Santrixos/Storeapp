@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ModernAppCard from "./ModernAppCard";
 import { MemoizedAppCard } from "./PerformanceOptimizer";
+import { RealAppIcon } from "./RealAppIcons";
 import type { App } from "@shared/schema";
 import { useState, useEffect, useMemo } from "react";
 
