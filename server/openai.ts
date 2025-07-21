@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 export async function generateAppRecommendations(userQuery: string): Promise<{
   recommendations: Array<{
@@ -11,6 +11,30 @@ export async function generateAppRecommendations(userQuery: string): Promise<{
   }>;
   suggestedSearchTerms: string[];
 }> {
+  if (!openai) {
+    // Return fallback recommendations when OpenAI is not available
+    return {
+      recommendations: [
+        {
+          category: "games",
+          reason: "Entretenimiento popular",
+          keywords: ["juegos", "diversión", "entretenimiento"]
+        },
+        {
+          category: "social",
+          reason: "Aplicaciones de comunicación",
+          keywords: ["chat", "redes sociales", "mensajes"]
+        },
+        {
+          category: "productivity",
+          reason: "Herramientas útiles",
+          keywords: ["productividad", "trabajo", "organización"]
+        }
+      ],
+      suggestedSearchTerms: ["whatsapp", "spotify", "instagram", "tiktok", "youtube"]
+    };
+  }
+
   try {
     const prompt = `Eres un asistente de IA especializado en aplicaciones móviles. Un usuario busca: "${userQuery}"
 
@@ -65,6 +89,15 @@ export async function generateAppDescription(appName: string, category: string):
   features: string[];
   tags: string[];
 }> {
+  if (!openai) {
+    // Return fallback description when OpenAI is not available
+    return {
+      description: `${appName} es una aplicación innovadora de la categoría ${category} con tecnología de vanguardia y funciones avanzadas.`,
+      features: ["Interfaz moderna", "Rendimiento optimizado", "Funciones premium", "Seguridad avanzada"],
+      tags: ["innovador", "moderno", "eficiente"]
+    };
+  }
+
   try {
     const prompt = `Genera una descripción futurista y atractiva para una aplicación llamada "${appName}" de la categoría "${category}".
 
@@ -111,6 +144,11 @@ La descripción debe ser emocionante, mencionar tecnología avanzada y beneficio
 }
 
 export async function detectAppIcon(appName: string): Promise<string | null> {
+  if (!openai) {
+    // Return null when OpenAI is not available
+    return null;
+  }
+
   try {
     // Generate a futuristic app icon using DALL-E
     const response = await openai.images.generate({
@@ -127,7 +165,7 @@ export async function detectAppIcon(appName: string): Promise<string | null> {
       quality: "standard",
     });
 
-    return response.data[0].url || null;
+    return response.data?.[0]?.url || null;
   } catch (error) {
     console.error("Error generating app icon:", error);
     return null;
