@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
+import OptimizedImage from "./ImageOptimizer";
 import { 
   Smartphone, 
   Gamepad2, 
@@ -44,25 +45,28 @@ export default function AppIconGenerator({
     xl: "h-10 w-10"
   };
 
-  // Generate dynamic colors based on app name
-  useEffect(() => {
-    const generateColors = () => {
-      const hash = appName.split('').reduce((acc, char) => {
-        return char.charCodeAt(0) + ((acc << 5) - acc);
-      }, 0);
+  // Generate dynamic colors based on app name (memoized for performance)
+  const colors = useMemo(() => {
+    const hash = appName.split('').reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
 
-      const hue = Math.abs(hash) % 360;
-      const saturation = 60 + (Math.abs(hash) % 40); // 60-100%
-      const lightness = 45 + (Math.abs(hash) % 20);  // 45-65%
+    const hue = Math.abs(hash) % 360;
+    const saturation = 60 + (Math.abs(hash) % 40); // 60-100%
+    const lightness = 45 + (Math.abs(hash) % 20);  // 45-65%
 
-      const secondHue = (hue + 60) % 360;
-      
-      setIconColor(`hsl(${hue}, ${saturation}%, ${lightness + 20}%)`);
-      setBgGradient(`linear-gradient(135deg, hsl(${hue}, ${saturation}%, ${lightness}%) 0%, hsl(${secondHue}, ${saturation - 10}%, ${lightness - 10}%) 100%)`);
+    const secondHue = (hue + 60) % 360;
+    
+    return {
+      iconColor: `hsl(${hue}, ${saturation}%, ${lightness + 20}%)`,
+      bgGradient: `linear-gradient(135deg, hsl(${hue}, ${saturation}%, ${lightness}%) 0%, hsl(${secondHue}, ${saturation - 10}%, ${lightness - 10}%) 100%)`
     };
-
-    generateColors();
   }, [appName]);
+
+  useEffect(() => {
+    setIconColor(colors.iconColor);
+    setBgGradient(colors.bgGradient);
+  }, [colors]);
 
   // Get icon based on category
   const getCategoryIcon = () => {

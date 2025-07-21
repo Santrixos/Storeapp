@@ -1,8 +1,9 @@
-import { Star, Download, Play, ExternalLink } from "lucide-react";
+import { Star, Download, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getAppIcon, getAppEmoji, generateGradientIcon } from "@/utils/iconUtils";
+import OptimizedImage from "./ImageOptimizer";
+import AppIconGenerator from "./AppIconGenerator";
 import type { App } from "@shared/schema";
 
 interface ModernAppCardProps {
@@ -24,43 +25,31 @@ export default function ModernAppCard({
   };
 
   const AppIcon = () => {
-    const iconUrl = getAppIcon(app);
-    const emoji = getAppEmoji(app.name, app.category);
-    const gradientClass = generateGradientIcon(app.name);
-    
-    if (typeof iconUrl === 'string' && iconUrl.startsWith('http')) {
-      return (
-        <img 
-          src={iconUrl} 
-          alt={app.name}
-          className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-110"
-          onError={(e) => {
-            // Fallback to gradient with emoji
-            e.currentTarget.style.display = 'none';
-            const parent = e.currentTarget.parentElement;
-            if (parent) {
-              parent.innerHTML = `
-                <div class="w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-3xl shadow-lg">
-                  ${emoji}
-                </div>
-              `;
-            }
-          }}
+    return (
+      <div className="relative w-full h-full">
+        <AppIconGenerator 
+          appName={app.name}
+          category={app.category}
+          size="lg"
+          className="w-full h-full"
         />
-      );
-    } else {
-      return (
-        <div className={`w-full h-full bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center text-3xl shadow-lg transition-transform duration-300 group-hover:scale-110`}>
-          {emoji}
-        </div>
-      );
-    }
+        {app.iconUrl && (
+          <OptimizedImage
+            src={app.iconUrl}
+            alt={app.name}
+            className="absolute inset-0 w-full h-full rounded-xl"
+            size="lg"
+            lazy={true}
+          />
+        )}
+      </div>
+    );
   };
 
   return (
     <Card
       onClick={() => onAppSelect(app)}
-      className={`modern-glass modern-hover cursor-pointer group border-white/10 hover:border-cyan-400/50 overflow-hidden ${
+      className={`modern-glass modern-hover cursor-pointer group border-white/10 hover:border-cyan-400/50 overflow-hidden transition-all duration-300 ${
         layout === "list" ? "flex-row h-32" : "h-full"
       }`}
     >
@@ -113,46 +102,22 @@ export default function ModernAppCard({
               </div>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Badge 
-                variant="secondary" 
-                className="bg-cyan-900/30 text-cyan-300 border-cyan-400/30 text-xs"
-              >
-                {app.category}
-              </Badge>
-              <span className="text-gray-400 text-xs">{app.size}</span>
-            </div>
+            <Badge variant="outline" className="text-xs border-cyan-500/30 text-cyan-400">
+              {app.category}
+            </Badge>
           </div>
 
-          {/* Action Buttons */}
-          {showDownloadButton && (
-            <div className={`flex space-x-2 ${layout === "list" ? "justify-end" : ""}`}>
-              <Button
-                onClick={handleDownload}
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/30"
-                size={layout === "list" ? "sm" : "default"}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                {layout === "list" ? "Instalar" : "Instalar Gratis"}
-              </Button>
-              
-              <Button
-                variant="outline"
-                size={layout === "list" ? "sm" : "default"}
-                className="border-white/20 text-white hover:bg-white/10 transition-all duration-300"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAppSelect(app);
-                }}
-              >
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </div>
+          {/* Action Button */}
+          {showDownloadButton && layout === "grid" && (
+            <Button
+              onClick={handleDownload}
+              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Descargar APK
+            </Button>
           )}
         </div>
-
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
       </CardContent>
     </Card>
   );

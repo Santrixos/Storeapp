@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, X, Bot, Sparkles, Search, Download, Star, Smartphone } from "lucide-react";
+import { MessageCircle, X, Bot, Sparkles, Search, Download, Star, Smartphone, Mic, Gamepad2, Settings, TrendingUp, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -28,66 +28,138 @@ export default function HelpBot({ onSearchDemo, onCategoryDemo, onFeaturedDemo }
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentTip, setCurrentTip] = useState(0);
 
-  const tips = [
+  const creativeTips = [
     {
-      text: "¡Hola! Soy NexusBot 🤖 Tu guía personal en THE STYLE OF NEXUS. ¿Te ayudo a navegar?",
+      text: "¡Hey! 👋 Soy NexusBot, tu compañero cibernético en esta aventura digital. ¿Listo para explorar el universo de apps?",
+      mood: "excited",
       actions: [
         { 
-          label: "Ver buscador", 
+          label: "🚀 ¡Empezar aventura!", 
           action: () => onSearchDemo?.(),
-          icon: <Search className="h-4 w-4" />
+          icon: <Sparkles className="h-4 w-4" />
         },
         { 
-          label: "Explorar categorías", 
+          label: "🎮 Ver juegos épicos", 
           action: () => onCategoryDemo?.("games"),
           icon: <Smartphone className="h-4 w-4" />
         }
       ]
     },
     {
-      text: "💡 Tip: Usa el buscador inteligente para encontrar apps específicas o describe lo que necesitas.",
+      text: "🔍 Psst... El buscador tiene súper poderes! Puede entender tu voz, predecir lo que buscas y hasta leer tu mente (bueno, casi) 🧠✨",
+      mood: "mysterious",
       actions: [
         { 
-          label: "Mostrar buscador", 
+          label: "🎙️ Probar voz", 
           action: () => onSearchDemo?.(),
-          icon: <Search className="h-4 w-4" />
+          icon: <Mic className="h-4 w-4" />
+        },
+        { 
+          label: "🔮 Ver magia IA", 
+          action: () => {
+            addMessage("¡La IA analiza patrones, predice tendencias y sugiere apps perfectas para ti! Es como tener un genio digital 🧞‍♂️", true);
+          },
+          icon: <Sparkles className="h-4 w-4" />
         }
       ]
     },
     {
-      text: "⭐ ¿Sabías que puedes ver las apps destacadas y en tendencia? ¡Aquí están las más populares!",
+      text: "⚡ ¡FLASH NEWS! Las apps destacadas cambian constantemente. Son como meteoritos digitales: brillantes, poderosas y siempre en movimiento 🌟💫",
+      mood: "energetic",
       actions: [
         { 
-          label: "Ver destacadas", 
+          label: "⭐ Ver destacadas", 
           action: () => onFeaturedDemo?.(),
+          icon: <TrendingUp className="h-4 w-4" />
+        },
+        { 
+          label: "🔥 Tendencias hot", 
+          action: () => {
+            addMessage("Las tendencias se actualizan en tiempo real basadas en descargas, ratings y actividad de usuarios. ¡Siempre hay algo nuevo!", true);
+          },
+          icon: <Zap className="h-4 w-4" />
+        }
+      ]
+    },
+    {
+      text: "🎯 Categorías = portales dimensionales! Cada una te transporta a un universo diferente de apps. ¿A qué dimensión quieres viajar?",
+      mood: "playful",
+      actions: [
+        { 
+          label: "🎮 Dimensión Gaming", 
+          action: () => onCategoryDemo?.("games"),
+          icon: <Gamepad2 className="h-4 w-4" />
+        },
+        { 
+          label: "💬 Mundo Social", 
+          action: () => onCategoryDemo?.("social"),
+          icon: <MessageCircle className="h-4 w-4" />
+        },
+        { 
+          label: "🛠️ Zona Herramientas", 
+          action: () => onCategoryDemo?.("tools"),
+          icon: <Settings className="h-4 w-4" />
+        }
+      ]
+    },
+    {
+      text: "💎 Secreto de descarga ninja: Click → Detalles épicos → Botón mágico → ¡BOOM! App en tu dispositivo. Más fácil que hacer ramen instantáneo 🍜",
+      mood: "ninja",
+      actions: [
+        { 
+          label: "🥷 Modo ninja ON", 
+          action: () => {
+            addMessage("Técnica secreta activada:\n1. 👆 Click sigiloso en app\n2. 👁️ Observa detalles\n3. ⚡ Strike del botón descarga\n4. 🎊 ¡Victoria total!", true);
+          },
+          icon: <Zap className="h-4 w-4" />
+        }
+      ]
+    },
+    {
+      text: "🌈 Plot twist: Los iconos de las apps se generan automáticamente con IA! Cada uno es único como un copo de nieve digital ❄️✨",
+      mood: "amazed",
+      actions: [
+        { 
+          label: "🎨 Ver magia iconos", 
+          action: () => {
+            addMessage("La IA analiza el nombre y categoría de cada app para crear iconos únicos con colores, formas y símbolos perfectos. ¡Arte digital en tiempo real! 🎭", true);
+          },
+          icon: <Sparkles className="h-4 w-4" />
+        }
+      ]
+    },
+    {
+      text: "🚀 Fun fact: Tenemos más de 1400 apps esperándote! Es como tener una biblioteca de Alejandría, pero para tu bolsillo 📚➡️📱",
+      mood: "amazed",
+      actions: [
+        { 
+          label: "📊 Ver estadísticas", 
+          action: () => {
+            addMessage("🎯 1400+ apps disponibles\n📈 5 categorías principales\n⭐ Miles de ratings\n🔄 Actualizaciones diarias\n¡Y creciendo constantemente!", true);
+          },
           icon: <Star className="h-4 w-4" />
         }
       ]
     },
     {
-      text: "📱 Explora por categorías: Juegos, Social, Productividad, Multimedia y Herramientas.",
+      text: "🎪 ¡BONUS ROUND! Cada app tiene su propia personalidad digital. Algunas son ninjas silenciosas, otras rockstars ruidosas. ¿Cuál es tu estilo? 🦄✨",
+      mood: "playful",
       actions: [
         { 
-          label: "Ver Juegos", 
-          action: () => onCategoryDemo?.("games"),
-          icon: <Smartphone className="h-4 w-4" />
+          label: "🥷 Modo stealth", 
+          action: () => {
+            addMessage("¡Apps ninja activadas! Herramientas de productividad, VPNs, y utilities silenciosas que hacen el trabajo sin hacer ruido 🤫", true);
+            onCategoryDemo?.("tools");
+          },
+          icon: <Settings className="h-4 w-4" />
         },
         { 
-          label: "Ver Social", 
-          action: () => onCategoryDemo?.("social"),
-          icon: <MessageCircle className="h-4 w-4" />
-        }
-      ]
-    },
-    {
-      text: "🔥 Para descargar una app, simplemente haz clic en ella y luego en el botón de descarga. ¡Es así de fácil!",
-      actions: [
-        { 
-          label: "Mostrar proceso", 
+          label: "🎸 Modo rockstar", 
           action: () => {
-            addMessage("1. Haz clic en cualquier app\n2. Se abrirá una ventana con detalles\n3. Clic en 'Descargar APK'\n4. ¡Listo para instalar!", true);
+            addMessage("¡A todo volumen! Juegos épicos, apps de música y entretenimiento que ponen a rugir tu dispositivo 🔥🎵", true);
+            onCategoryDemo?.("games");
           },
-          icon: <Download className="h-4 w-4" />
+          icon: <Zap className="h-4 w-4" />
         }
       ]
     }
@@ -95,16 +167,16 @@ export default function HelpBot({ onSearchDemo, onCategoryDemo, onFeaturedDemo }
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      addMessage(tips[0].text, true, tips[0].actions);
+      addMessage(creativeTips[0].text, true, creativeTips[0].actions);
     }
   }, [isOpen]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isOpen) {
-        setCurrentTip((prev) => (prev + 1) % tips.length);
+        setCurrentTip((prev) => (prev + 1) % creativeTips.length);
       }
-    }, 8000);
+    }, 6000); // Más frecuente para mayor dinamismo
 
     return () => clearInterval(interval);
   }, [isOpen]);
@@ -125,24 +197,95 @@ export default function HelpBot({ onSearchDemo, onCategoryDemo, onFeaturedDemo }
     
     // Bot responses based on user action
     setTimeout(() => {
-      if (actionText.includes("buscar")) {
-        addMessage("Perfecto! El buscador inteligente puede entender consultas como 'juegos de carreras' o 'apps de música'. También puedes usar filtros avanzados.", true);
-      } else if (actionText.includes("categoría")) {
-        addMessage("¡Excelente elección! Cada categoría tiene apps cuidadosamente seleccionadas. También puedes filtrar por rating o popularidad.", true);
-      } else if (actionText.includes("descargar")) {
-        addMessage("Genial! Todas nuestras descargas son seguras y están verificadas. ¡Disfruta tu nueva app!", true);
-      } else {
-        addMessage("¡Perfecto! ¿Hay algo más en lo que te pueda ayudar? 😊", true);
-      }
-    }, 1000);
+      const responses = {
+        "buscar": [
+          "¡Increíble! 🔮 El buscador tiene IA que entiende hasta jerga gamer. Prueba 'juegos de zombies' o 'apps para editar fotos aesthetic'",
+          "¡Pro tip! 🎯 Puedes buscar por voz, usar filtros ninja y hasta encontrar apps por emojis. ¡El futuro es ahora!",
+          "¡Mind blown! 🤯 La búsqueda aprende de ti. Mientras más usas, más inteligente se vuelve. Es como entrenar tu propio Pokémon digital!"
+        ],
+        "categoría": [
+          "¡Portal activado! 🌀 Cada categoría es como un mundo diferente con sus propias reglas y tesoros ocultos.",
+          "¡Easter egg! 🥚 Las categorías tienen filtros secretos. Prueba ordenar por 'recientes' para encontrar gemas nuevas.",
+          "¡Fun fact! 📊 Las categorías se actualizan automáticamente basadas en tendencias mundiales. ¡Siempre están fresh!"
+        ],
+        "descargar": [
+          "¡Nivel ninja desbloqueado! 🥷 Descarga = Click → Modal épico → Botón mágico → ¡BOOM! App en tu poder.",
+          "¡Seguridad level 100! 🛡️ Todas las apps pasan por escaneos anti-malware y verificación de desarrolladores.",
+          "¡Speed run! ⚡ Record mundial: De click a app instalada en menos de 30 segundos. ¿Puedes romper el récord?"
+        ],
+        "seguras": [
+          "¡Fort Knox digital! 🏰 Usamos encriptación militar, verificación de developers y AI anti-malware 24/7.",
+          "¡Protección level Wakanda! 🛡️ Cada app pasa por más de 50 verificaciones antes de llegar a ti.",
+          "¡Tranqui! 😎 Tenemos más seguridad que el banco central. Tu dispositivo está en buenas manos."
+        ],
+        "destacadas": [
+          "¡Las celebridades del app-mundo! ⭐ Destacadas = apps que rompieron internet, trendearon en redes y conquistaron corazones.",
+          "¡Plot twist! 🎬 Las destacadas cambian cada 6 horas basadas en descargas reales, ratings y viralidad.",
+          "¡VIP access! 💎 Las destacadas son como el red carpet de las apps. Solo las más épicas llegan aquí."
+        ],
+        "default": [
+          "¡Awesome! 🚀 ¿Sabías que soy una IA entrenada con datos de millones de usuarios? ¡Pregúntame lo que sea!",
+          "¡Plot twist! 🎭 Cada vez que hablas conmigo, me vuelvo más inteligente. ¡Somos team ahora!",
+          "¡Fun fact! 🌟 Puedo hacer más de 47 cosas diferentes. ¿Quieres descubrir mis poderes secretos?",
+          "¡Dato curioso! 🤖 Mi algoritmo analiza patrones de comportamiento para predecir qué apps te gustarán. ¡Es como magia, pero con matemáticas!",
+          "¡Easter egg desbloqueado! 🥚 Si me preguntas sobre algo específico, puedo generar respuestas únicas basadas en el contexto. ¡Soy un bot, pero creativo!",
+          "¡Mind = blown! 🤯 Proceso información en nanosegundos, pero me tomo mi tiempo para darte respuestas con personalidad. ¡La velocidad no está reñida con el estilo!"
+        ]
+      };
+
+      const getResponse = () => {
+        if (actionText.includes("buscar") || actionText.includes("🔍")) return responses.buscar;
+        if (actionText.includes("categoría") || actionText.includes("📂")) return responses.categoría;
+        if (actionText.includes("descargar") || actionText.includes("📥")) return responses.descargar;
+        if (actionText.includes("seguras") || actionText.includes("🛡️")) return responses.seguras;
+        if (actionText.includes("destacadas") || actionText.includes("⭐")) return responses.destacadas;
+        if (actionText.includes("Sorpréndeme") || actionText.includes("🎮")) {
+          // Random surprise responses
+          const surprises = [
+            "¡PLOT TWIST! 🎬 El juego más descargado tiene menos de 50MB pero más diversión que un parque de atracciones entero!",
+            "¡SECRET UNLOCKED! 🗝️ Las apps de productividad más exitosas fueron creadas por equipos de menos de 5 personas. ¡El poder del indie dev!",
+            "¡MIND BLOWN! 🤯 Hay una app que puede traducir maullidos de gatos. Sí, en serio. La tecnología ha llegado MUY lejos...",
+            "¡EASTER EGG! 🥚 Si buscas 'unicornio', encontrarás apps con las reviews más creativas del universo. ¡La comunidad es épica!"
+          ];
+          return [surprises[Math.floor(Math.random() * surprises.length)]];
+        }
+        if (actionText.includes("puedes hacer") || actionText.includes("🤖")) {
+          return [
+            "¡Lista de súper poderes activada! 💪\n🔮 Predecir apps perfectas para ti\n🎯 Navegar por voz\n🚀 Generar iconos dinámicos\n🎪 Contar chistes de programador\n✨ Y mucho más que irás descubriendo..."
+          ];
+        }
+        if (actionText.includes("épico") || actionText.includes("🎪")) {
+          return [
+            "¡MODO ÉPICO ACTIVADO! 🎆\n*Efectos especiales activados*\n*Música épica de fondo*\n*Confeti digital cayendo*\n\n¿Listo para explorar el universo de apps como un verdadero héroe digital? 🦸‍♂️✨"
+          ];
+        }
+        if (actionText.includes("tutorial") || actionText.includes("✨")) {
+          return [
+            "¡Tutorial interactivo iniciado! 🎓\n\n1️⃣ Usa el buscador para encontrar tesoros\n2️⃣ Las categorías son portales a diferentes mundos\n3️⃣ Los iconos son únicos y generados por IA\n4️⃣ ¡Yo estoy aquí para guiarte en todo momento!\n\n¿Por dónde empezamos la aventura? 🗺️"
+          ];
+        }
+        return responses.default;
+      };
+
+      const responseArray = getResponse();
+      const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
+      addMessage(randomResponse, true);
+    }, 800 + Math.random() * 400); // Tiempo aleatorio para más naturalidad
   };
 
   const quickActions = [
-    "¿Cómo buscar apps?",
-    "Ver por categoría",
-    "¿Cómo descargar?",
-    "¿Son seguras las apps?",
-    "Mostrar destacadas"
+    "🔍 ¿Cómo buscar apps?",
+    "📂 Ver por categoría", 
+    "📥 ¿Cómo descargar?",
+    "🛡️ ¿Son seguras las apps?",
+    "⭐ Mostrar destacadas",
+    "🎯 Apps recomendadas",
+    "🚀 Novedades",
+    "💡 Tips secretos",
+    "🎮 ¡Sorpréndeme!",
+    "🤖 ¿Qué puedes hacer?",
+    "✨ Modo tutorial",
+    "🎪 ¡Haz algo épico!"
   ];
 
   return (
@@ -164,10 +307,12 @@ export default function HelpBot({ onSearchDemo, onCategoryDemo, onFeaturedDemo }
               exit={{ opacity: 0, scale: 0.8, y: -10 }}
               className="absolute bottom-16 right-0 bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-3 rounded-lg shadow-xl max-w-xs mb-2"
             >
-              <div className="text-sm font-medium">
-                {tips[currentTip].text.split(' ').slice(0, 8).join(' ')}...
+              <div className="text-sm font-medium animate-pulse">
+                {creativeTips[currentTip].text.split(' ').slice(0, 10).join(' ')}...
               </div>
-              <div className="absolute bottom-0 right-4 w-3 h-3 bg-gradient-to-r from-cyan-500 to-blue-600 transform rotate-45 translate-y-1.5"></div>
+              <div className="absolute bottom-0 right-4 w-3 h-3 bg-gradient-to-r from-cyan-500 to-blue-600 transform rotate-45 translate-y-1.5">
+                <div className="absolute inset-0 animate-ping bg-cyan-400 rounded-sm"></div>
+              </div>
             </motion.div>
           )}
           

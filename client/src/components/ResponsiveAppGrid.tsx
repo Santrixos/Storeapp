@@ -3,8 +3,9 @@ import { Star, Download, Grid3X3, List, Filter, SortAsc, Eye } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ModernAppCard from "./ModernAppCard";
+import { MemoizedAppCard } from "./PerformanceOptimizer";
 import type { App } from "@shared/schema";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 interface ResponsiveAppGridProps {
   category: string;
@@ -37,24 +38,28 @@ export default function ResponsiveAppGrid({ category, searchQuery, onAppSelect }
     window.open(downloadUrl, '_blank');
   };
 
-  // Sort apps based on selected criteria
-  const sortedApps = apps ? [...apps].sort((a: App, b: App) => {
-    switch (sortBy) {
-      case "newest":
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      case "rating":
-        return b.rating - a.rating;
-      case "name":
-        return a.name.localeCompare(b.name);
-      case "downloads":
-        const aDownloads = parseInt(a.downloads.replace(/\D/g, '')) || 0;
-        const bDownloads = parseInt(b.downloads.replace(/\D/g, '')) || 0;
-        return bDownloads - aDownloads;
-      case "popular":
-      default:
-        return b.rating - a.rating;
-    }
-  }) : [];
+  // Sort apps based on selected criteria (memoized for performance)
+  const sortedApps = useMemo(() => {
+    if (!apps) return [];
+    
+    return [...apps].sort((a: App, b: App) => {
+      switch (sortBy) {
+        case "newest":
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case "rating":
+          return b.rating - a.rating;
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "downloads":
+          const aDownloads = parseInt(a.downloads?.replace(/\D/g, '') || '0') || 0;
+          const bDownloads = parseInt(b.downloads?.replace(/\D/g, '') || '0') || 0;
+          return bDownloads - aDownloads;
+        case "popular":
+        default:
+          return b.rating - a.rating;
+      }
+    });
+  }, [apps, sortBy]);
 
   const displayedApps = sortedApps.slice(0, displayCount);
 
