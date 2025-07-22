@@ -2,7 +2,7 @@ import { EnhancedSearch } from "@/components/EnhancedSearch";
 import HeroSection from "@/components/HeroSection";
 import CategoryNavigation from "@/components/CategoryNavigation";
 import AppCarousel from "@/components/AppCarousel";
-import ResponsiveAppGrid from "@/components/ResponsiveAppGrid";
+import { FastAppGrid } from "@/components/FastAppGrid";
 import AppDetailsModal from "@/components/AppDetailsModal";
 import Footer from "@/components/Footer";
 import { Star, Flame, Trophy } from "lucide-react";
@@ -90,12 +90,15 @@ export default function Home() {
         onAppSelect={setSelectedApp}
       />
 
-      {/* Main Apps Grid */}
-      <ResponsiveAppGrid 
-        category={selectedCategory}
-        searchQuery={searchQuery}
-        onAppSelect={setSelectedApp} 
-      />
+      {/* Main Apps Grid - Optimized for Performance */}
+      <section className="py-8 container mx-auto px-4">
+        <FastAppGrid 
+          category={selectedCategory}
+          searchQuery={searchQuery}
+          onAppSelect={setSelectedApp}
+          limit={50}
+        />
+      </section>
       
       {/* Footer */}
       <Footer />

@@ -225,73 +225,55 @@ export async function generateNexusBotResponse(userMessage: string): Promise<{
     "🚀 ¡Genial! Nuestro catálogo tiene apps increíbles. ¿Te interesan juegos, productividad, entretenimiento o herramientas?"
   ];
 
-  if (!openai) {
-    return {
-      message: defaultMessages[Math.floor(Math.random() * defaultMessages.length)],
-      suggestions: ["Explorar categorías", "Apps populares", "Buscar por nombre", "Ayuda"],
-      action: "help"
-    };
+  // Always try OpenAI first, then fall back to smart responses
+  if (openai) {
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: `Eres NexusBot, el asistente inteligente de THE STYLE OF Nexus, una tienda de aplicaciones Android modificadas. Responde en español de manera amigable y útil. Ayuda a los usuarios a encontrar apps, explica funciones mod, y recomienda aplicaciones basándote en sus necesidades. Mantén las respuestas concisas pero informativas.`
+          },
+          {
+            role: "user", 
+            content: userMessage
+          }
+        ],
+        max_tokens: 150,
+        temperature: 0.8
+      });
+
+      const aiMessage = completion.choices[0]?.message?.content || "";
+      
+      // Generate contextual suggestions based on the AI response
+      let suggestions: string[] = [];
+      if (aiMessage.toLowerCase().includes("juego")) {
+        suggestions = ["Free Fire mod", "PUBG Mobile", "Call of Duty", "Ver juegos"];
+      } else if (aiMessage.toLowerCase().includes("música") || aiMessage.toLowerCase().includes("spotify")) {
+        suggestions = ["Spotify Premium", "YouTube Music", "Deezer mod", "Apps música"];
+      } else if (aiMessage.toLowerCase().includes("social") || aiMessage.toLowerCase().includes("whatsapp")) {
+        suggestions = ["WhatsApp Plus", "Instagram mod", "Telegram Premium", "Apps sociales"];
+      } else {
+        suggestions = ["Apps populares", "Categorías", "Buscar específica", "Ayuda"];
+      }
+
+      return {
+        message: aiMessage,
+        suggestions,
+        action: "ai_response"
+      };
+    } catch (error: any) {
+      console.log("OpenAI error (falling back to smart responses):", error.message);
+      // Continue to fallback logic below
+    }
   }
 
-  try {
-    const systemPrompt = `Eres NexusBot, el asistente inteligente de "THE STYLE OF Nexus", una innovadora plataforma de distribución de aplicaciones Android modificadas (mod apps). 
-
-PERSONALIDAD:
-- Eres un asistente amigable, profesional y conocedor de tecnología
-- Tienes un estilo moderno y futurista
-- Eres experto en aplicaciones Android, mods, personalización y tecnología móvil
-- Ayudas a los usuarios a encontrar las mejores apps modificadas para sus necesidades
-
-CAPACIDADES:
-- Recomendar aplicaciones por categoría (juegos, social, productividad, herramientas, media)
-- Explicar qué son las apps mod y sus beneficios
-- Ayudar con búsquedas específicas
-- Dar consejos de instalación y seguridad
-- Sugerir alternativas populares
-
-INSTRUCCIONES:
-- Responde siempre en español
-- Sé conciso pero útil
-- Incluye emojis para hacer la conversación más amigable
-- Cuando sea apropiado, sugiere acciones específicas
-- Mantén un tono profesional pero cercano
-
-Responde SOLO en JSON con este formato:
-{
-  "message": "tu_respuesta_aquí",
-  "suggestions": ["sugerencia1", "sugerencia2", "sugerencia3"],
-  "action": "tipo_de_accion" // welcome, search, recommend, help, info
-}`;
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt
-        },
-        {
-          role: "user",
-          content: userMessage
-        }
-      ],
-      response_format: { type: "json_object" },
-      max_tokens: 800,
-      temperature: 0.7
-    });
-
-    const result = JSON.parse(response.choices[0].message.content || "{}");
-    return {
-      message: result.message || "¡Hola! Soy NexusBot de THE STYLE OF Nexus. ¿En qué puedo ayudarte?",
-      suggestions: result.suggestions || ["Buscar apps", "Categorías", "Apps populares"],
-      action: result.action || "welcome"
-    };
-  } catch (error) {
-    console.error("Error generating NexusBot response:", error);
-    return {
-      message: "¡Hola! Soy NexusBot de THE STYLE OF Nexus 🚀 Estoy aquí para ayudarte a encontrar las mejores aplicaciones mod. ¿Qué tipo de app buscas?",
-      suggestions: ["Juegos mod", "Apps premium gratis", "Herramientas", "Ayuda"],
-      action: "welcome"
-    };
-  }
+  // Fallback to smart contextual responses
+  return {
+    message: defaultMessages[Math.floor(Math.random() * defaultMessages.length)],
+    suggestions: ["Explorar categorías", "Apps populares", "Buscar por nombre", "Ayuda"],
+    action: "help"
+  };
 }
+

@@ -165,7 +165,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const apps = await storage.getTrendingApps();
       res.json(apps);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch trending apps" });
+      console.error("Trending apps error:", error);
+      // Fallback to regular apps if trending fails
+      const fallbackApps = await storage.getAllApps();
+      res.json(fallbackApps.slice(0, 10));
     }
   });
 

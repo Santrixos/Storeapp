@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import ModernAppCard from "./ModernAppCard";
 import { getAppIcon, getAppEmoji, generateGradientIcon } from "@/utils/iconUtils";
 import type { App } from "@shared/schema";
+import { RealAppIcon } from "./RealAppIcons";
 import { useState, useRef, useEffect } from "react";
 
 interface ModernAppIconProps {
@@ -197,7 +198,7 @@ export default function AppCarousel({
                   {/* App Icon and Info */}
                   <div className="flex items-start space-x-4 mb-4">
                     <div className="relative">
-                      <ModernAppIcon app={app} size="lg" />
+                      <RealAppIcon appName={app.name} className="w-16 h-16 rounded-xl shadow-lg" />
                     </div>
                     
                     <div className="flex-1 min-w-0">
